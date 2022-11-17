@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Serialization;
 
 namespace CromulentBisgetti.DemoApp
 {
@@ -32,11 +33,42 @@ namespace CromulentBisgetti.DemoApp
             });
 
 
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddJsonOptions(options =>
                 {
-                    options.SerializerSettings.ContractResolver = null;
+
+                    // 11/16/2022 09:24 pm - SSN - [20221116-2038] - [004] - Removed with .NET Core 3.1
+                    // See [20221116-2038] - [002] for replacement fix. API will not work without.
+
+                    // Todo options.SerializerSettings.ContractResolver
+                    // options.SerializerSettings.ContractResolver = null;
+
+
+                })
+
+                // 11/16/2022 08:44 pm - SSN - [20221116-2038] - [002] - Upgrade to .NET Core 3.1
+                // Fix replacement for [20221116-2038] - [001] app.UseMvcWithDefaultRoute();
+
+                // Install NuGet package 
+                //Id                : Microsoft.AspNetCore.Mvc.NewtonsoftJson
+                //Versions          : {3.1.31}
+
+
+
+                .AddMvcOptions(mvcOptions =>
+                {
+                    mvcOptions.EnableEndpointRouting = false;
                 });
+
+
+            // 11/16/2022 09:13 pm - SSN - [20221116-2038] - [003] - Upgrade to .NET Core 3.1
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +87,15 @@ namespace CromulentBisgetti.DemoApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+
+
+            // 11/16/2022 08:38 pm - SSN - [20221116-2038] - [001] - Upgrade to .NET Core 3.1
+
+            // Endpoint Routing does not support 'IApplicationBuilder.UseMvc(...)'. 
+            // To use 'IApplicationBuilder.UseMvc' set 'MvcOptions.EnableEndpointRouting = false' 
+            // inside 'ConfigureServices(...).
+            // See [20221116-2038] - [001] for applied fix.
 
             app.UseMvcWithDefaultRoute();
         }
