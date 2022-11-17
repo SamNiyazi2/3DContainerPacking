@@ -23,10 +23,21 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+
+# 11/16/2022 11:18 pm - SSN - Revised to pick up all projects
+#        run: dotnet build --configuration Release
+        
+        run: |
+         dotnet build src\CromulentBisgetti.ContainerPacking\CromulentBisgetti.ContainerPacking.csproj --configuration Release 
+         dotnet build src\CromulentBisgetti.ContainerPackingTests\CromulentBisgetti.ContainerPackingTests.csproj --configuration Release 
+         dotnet build src\CromulentBisgetti.DemoApp\CromulentBisgetti.DemoApp.csproj --configuration Release 
+
+
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+# 11/16/2022 11:18 pm - SSN - Revised to pick up all projects
+#        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish src\CromulentBisgetti.DemoApp\CromulentBisgetti.DemoApp.csproj -c Release -o ..\published001
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
