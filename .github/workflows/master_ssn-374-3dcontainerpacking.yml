@@ -37,7 +37,7 @@ jobs:
       - name: dotnet publish
 # 11/16/2022 11:18 pm - SSN - Revised to pick up all projects
 #        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-        run: dotnet publish src\CromulentBisgetti.DemoApp\CromulentBisgetti.DemoApp.csproj -c Release -o ..\published001
+        run: dotnet publish src\CromulentBisgetti.DemoApp\CromulentBisgetti.DemoApp.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
